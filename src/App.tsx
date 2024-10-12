@@ -11,6 +11,7 @@ import { TodoModal } from './components/TodoModal';
 import { Loader } from './components/Loader';
 import { filterTodos } from './utils/filterTodos';
 import { getTodoById } from './utils/getTodoById';
+import { TodoCompletedCategory } from './types/todoCompletedCategory';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -18,7 +19,9 @@ export const App: React.FC = () => {
   const [electTodoId, setElectTodoId] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(true);
   const [query, setQuery] = useState<string>('');
-  const [todoCategory, setTodoCategory] = useState<string>('all');
+  const [todoCategory, setTodoCategory] = useState<TodoCompletedCategory>(
+    TodoCompletedCategory.all,
+  );
 
   useEffect(() => {
     getTodos()

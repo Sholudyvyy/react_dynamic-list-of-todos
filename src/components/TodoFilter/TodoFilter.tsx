@@ -1,8 +1,10 @@
+import { TodoCompletedCategory } from '../../types/todoCompletedCategory';
+
 type Props = {
   query: string;
   onQuery: React.Dispatch<React.SetStateAction<string>>;
   todoCategory: string;
-  onTodoCategory: React.Dispatch<React.SetStateAction<string>>;
+  onTodoCategory: React.Dispatch<React.SetStateAction<TodoCompletedCategory>>;
 };
 
 export const TodoFilter: React.FC<Props> = ({
@@ -18,11 +20,15 @@ export const TodoFilter: React.FC<Props> = ({
           <select
             data-cy="statusSelect"
             value={todoCategory}
-            onChange={event => onTodoCategory(event.target.value)}
+            onChange={event =>
+              onTodoCategory(event.target.value as TodoCompletedCategory)
+            }
           >
-            <option value="all">All</option>
-            <option value="active">Active</option>
-            <option value="completed">Completed</option>
+            {Object.values(TodoCompletedCategory).map(option => (
+              <option key={option} value={option.toLowerCase()}>
+                {option}
+              </option>
+            ))}
           </select>
         </span>
       </p>
