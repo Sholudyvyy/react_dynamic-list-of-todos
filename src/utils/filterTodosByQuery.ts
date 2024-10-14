@@ -1,6 +1,7 @@
 import { Todo } from '../types/Todo';
+import { TodoCompletedCategory } from '../types/todoCompletedCategory';
 
-export function filterTodos(
+function filterTodos(
   todos: Todo[],
   todoCategory: string,
   query: string,
@@ -18,4 +19,15 @@ export function filterTodos(
   }
 
   return todos.filter(todo => todo.title.toLowerCase().includes(query));
+}
+
+export function filterTodosByQuery(
+  todos: Todo[],
+  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>,
+  todoCategory: TodoCompletedCategory,
+  query: string,
+) {
+  setTodos(() => {
+    return filterTodos(todos, todoCategory, query);
+  });
 }

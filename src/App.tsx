@@ -5,13 +5,13 @@ import '@fortawesome/fontawesome-free/css/all.css';
 
 import { TodoList } from './components/TodoList';
 import { TodoFilter } from './components/TodoFilter';
-import { getTodos } from './api';
 import { Todo } from './types/Todo';
 import { TodoModal } from './components/TodoModal';
 import { Loader } from './components/Loader';
-import { filterTodos } from './utils/filterTodos';
 import { getTodoById } from './utils/getTodoById';
 import { TodoCompletedCategory } from './types/todoCompletedCategory';
+import { setTodosFromApi } from './utils/setTodosFromApi';
+import { filterTodosByQuery } from './utils/filterTodosByQuery';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -24,18 +24,11 @@ export const App: React.FC = () => {
   );
 
   useEffect(() => {
-    getTodos()
-      .then(setTodos)
-      .finally(() => {
-        setVisibleTodos(todos);
-        setLoading(false);
-      });
+    setTodosFromApi(setTodos, setLoading);
   }, []);
 
   useEffect(() => {
-    setVisibleTodos(() => {
-      return filterTodos(todos, todoCategory, query);
-    });
+    filterTodosByQuery(todos, setVisibleTodos, todoCategory, query);
   }, [todos, query, todoCategory]);
 
   return (

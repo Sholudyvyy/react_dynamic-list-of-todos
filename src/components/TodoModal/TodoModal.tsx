@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Loader } from '../Loader';
 import { Todo } from '../../types/Todo';
 import { User } from '../../types/User';
-import { getUser } from '../../api';
+import { setUserFromApiById } from '../../utils/setUserFromApiById';
 
 type Props = {
   todo: Todo;
@@ -11,14 +11,10 @@ type Props = {
 
 export const TodoModal: React.FC<Props> = ({ todo, onElectTodoId }) => {
   const [user, setUser] = useState<User>();
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getUser(todo.userId)
-      .then(setUser)
-      .finally(() => {
-        setLoading(false);
-      });
+    setUserFromApiById(todo.userId, setUser, setLoading);
   }, []);
 
   return (
@@ -55,7 +51,13 @@ export const TodoModal: React.FC<Props> = ({ todo, onElectTodoId }) => {
               {todo.completed ? (
                 <strong className="has-text-success">Done</strong>
               ) : (
-                <strong className="has-text-danger">Planned</strong>
+                <strong
+                  className={
+                    todo.completed ? 'has-text-success' : 'has-text-danger'
+                  }
+                >
+                  {todo.completed ? 'Done' : 'Planned'}
+                </strong>
               )}
 
               {' by '}
