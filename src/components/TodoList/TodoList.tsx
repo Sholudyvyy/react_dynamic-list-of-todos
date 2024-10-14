@@ -31,7 +31,7 @@ export const TodoList: React.FC<Props> = ({
         {todos.map((todo: Todo) => (
           <TodoLine
             key={todo.id}
-            TodoElement={todo}
+            todo={todo}
             isSelected={electTodoId === todo.id}
             onElectTodoId={onElectTodoId}
           />

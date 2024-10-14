@@ -7,6 +7,12 @@ type Props = {
   onTodoCategory: React.Dispatch<React.SetStateAction<TodoCompletedCategory>>;
 };
 
+const nameForCategoriesOption = {
+  [TodoCompletedCategory.all]: 'All',
+  [TodoCompletedCategory.active]: 'Active',
+  [TodoCompletedCategory.competed]: 'Competed',
+};
+
 export const TodoFilter: React.FC<Props> = ({
   query,
   onQuery,
@@ -26,7 +32,7 @@ export const TodoFilter: React.FC<Props> = ({
           >
             {Object.values(TodoCompletedCategory).map(option => (
               <option key={option} value={option.toLowerCase()}>
-                {option}
+                {nameForCategoriesOption[option]}
               </option>
             ))}
           </select>

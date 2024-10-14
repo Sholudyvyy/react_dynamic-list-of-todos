@@ -1,5 +1,5 @@
 export enum TodoCompletedCategory {
-  all = 'All',
-  active = 'Active',
-  competed = 'Completed',
+  all = 'all',
+  active = 'active',
+  competed = 'completed',
 }

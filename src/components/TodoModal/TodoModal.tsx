@@ -6,22 +6,22 @@ import { setUserFromApiById } from '../../utils/setUserFromApiById';
 
 type Props = {
   todo: Todo;
-  onElectTodoId: React.Dispatch<React.SetStateAction<number>>;
+  onSelectedTodoId: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const TodoModal: React.FC<Props> = ({ todo, onElectTodoId }) => {
+export const TodoModal: React.FC<Props> = ({ todo, onSelectedTodoId }) => {
   const [user, setUser] = useState<User>();
-  const [loading, setLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setUserFromApiById(todo.userId, setUser, setLoading);
+    setUserFromApiById(todo.userId, setUser, setIsLoading);
   }, []);
 
   return (
     <div className="modal is-active" data-cy="modal">
       <div className="modal-background" />
 
-      {loading ? (
+      {isLoading ? (
         <Loader />
       ) : (
         <div className="modal-card">
@@ -38,7 +38,7 @@ export const TodoModal: React.FC<Props> = ({ todo, onElectTodoId }) => {
               type="button"
               className="delete"
               data-cy="modal-close"
-              onClick={() => onElectTodoId(0)}
+              onClick={() => onSelectedTodoId(0)}
             />
           </header>
 
@@ -48,23 +48,17 @@ export const TodoModal: React.FC<Props> = ({ todo, onElectTodoId }) => {
             </p>
 
             <p className="block" data-cy="modal-user">
-              {todo.completed ? (
-                <strong className="has-text-success">Done</strong>
-              ) : (
-                <strong
-                  className={
-                    todo.completed ? 'has-text-success' : 'has-text-danger'
-                  }
-                >
-                  {todo.completed ? 'Done' : 'Planned'}
-                </strong>
-              )}
+              <strong
+                className={
+                  todo.completed ? 'has-text-success' : 'has-text-danger'
+                }
+              >
+                {todo.completed ? 'Done' : 'Planned'}
+              </strong>
 
               {' by '}
 
-              <a href={`mailto:${user?.email}`}>
-                {user !== undefined ? user.name : ''}
-              </a>
+              <a href={`mailto:${user?.email}`}>{user?.name}</a>
             </p>
           </div>
         </div>

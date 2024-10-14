@@ -10,26 +10,37 @@ import { TodoModal } from './components/TodoModal';
 import { Loader } from './components/Loader';
 import { getTodoById } from './utils/getTodoById';
 import { TodoCompletedCategory } from './types/todoCompletedCategory';
-import { setTodosFromApi } from './utils/setTodosFromApi';
-import { filterTodosByQuery } from './utils/filterTodosByQuery';
+import { getTodos } from './api';
+import { filterTodos } from './utils/filterTodos';
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
   const [visibleTodos, setVisibleTodos] = useState<Todo[]>([]);
-  const [electTodoId, setElectTodoId] = useState<number>(0);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [selectedTodoId, setSelectedTodoId] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [query, setQuery] = useState<string>('');
   const [todoCategory, setTodoCategory] = useState<TodoCompletedCategory>(
     TodoCompletedCategory.all,
   );
 
+  function setTodosFromApi() {
+    getTodos()
+      .then(setTodos)
+      .catch(() => alert('Todos api is wrong!'))
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }
+
   useEffect(() => {
-    setTodosFromApi(setTodos, setLoading);
+    setTodosFromApi();
   }, []);
 
   useEffect(() => {
-    filterTodosByQuery(todos, setVisibleTodos, todoCategory, query);
-  }, [todos, query, todoCategory]);
+    setVisibleTodos(() => {
+      return filterTodos(todos, todoCategory, query);
+    });
+  }, [todos, todoCategory, query]);
 
   return (
     <>
@@ -48,12 +59,12 @@ export const App: React.FC = () => {
             </div>
 
             <div className="block">
-              {loading && <Loader />}
-              {!loading && (
+              {isLoading && <Loader />}
+              {!isLoading && (
                 <TodoList
                   todos={visibleTodos}
-                  electTodoId={electTodoId}
-                  onElectTodoId={setElectTodoId}
+                  electTodoId={selectedTodoId}
+                  onElectTodoId={setSelectedTodoId}
                 />
               )}
             </div>
@@ -61,10 +72,10 @@ export const App: React.FC = () => {
         </div>
       </div>
 
-      {electTodoId !== 0 && (
+      {selectedTodoId !== 0 && (
         <TodoModal
-          todo={getTodoById(visibleTodos, electTodoId)}
-          onElectTodoId={setElectTodoId}
+          todo={getTodoById(visibleTodos, selectedTodoId)}
+          onSelectedTodoId={setSelectedTodoId}
         />
       )}
     </>
